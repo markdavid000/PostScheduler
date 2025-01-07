@@ -7,11 +7,11 @@ import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText }
 import { toaster } from '@/components/ui/toaster'
 import { storeContentOnIPFS } from '../utils/ipfs'
 import { schedulePost, getScheduledPosts, checkScheduledPosts, clearPublishedAndFailedPosts, deleteScheduledPost } from '../utils/schedular'
-import { useAccount, useWalletClient } from "wagmi"
+import { useAccount } from "wagmi"
 import { createListCollection, Input, Textarea } from '@chakra-ui/react'
 import { ScheduledPost } from '../types/scheduledPost'
 import { FiCalendar, FiClock, FiEye, FiTrash2 } from 'react-icons/fi'
-import { authenticate } from '../utils/auth'
+// import { authenticate } from '../utils/auth'
 
 export function EnhancedPostScheduler() {
   const [content, setContent] = useState('')
@@ -21,13 +21,13 @@ export function EnhancedPostScheduler() {
   const [isScheduling, setIsScheduling] = useState(false)
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPost[]>([])
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  // const { data: walletClient } = useWalletClient()
 
   useEffect(() => {
     const init = async () => {
-      if (address && walletClient) {
+      // if (address && walletClient) {
         try {
-          await authenticate(address, walletClient);
+          // await authenticate(address, walletClient);
           await fetchScheduledPosts();
         } catch (error) {
           console.error('Authentication failed:', error);
@@ -37,7 +37,7 @@ export function EnhancedPostScheduler() {
             type: 'error'
           });
         }
-      }
+      // }
     };
 
     init();
@@ -50,7 +50,7 @@ export function EnhancedPostScheduler() {
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, [address, walletClient]);
+  }, [address]);
 
   const fetchScheduledPosts = async () => {
     if (address) {
