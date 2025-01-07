@@ -3,14 +3,14 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from '@/components/ui/select'
+import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from '@/components/ui/select'
 import { toaster } from '@/components/ui/toaster'
 import { storeContentOnIPFS } from '../utils/ipfs'
 import { schedulePost, getScheduledPosts, checkScheduledPosts, clearPublishedAndFailedPosts, deleteScheduledPost } from '../utils/schedular'
 import { useAccount, useWalletClient } from "wagmi"
 import { createListCollection, Input, Textarea } from '@chakra-ui/react'
 import { ScheduledPost } from '../types/scheduledPost'
-import { FiCalendar, FiClock, FiEye, FiSend, FiTrash2 } from 'react-icons/fi'
+import { FiCalendar, FiClock, FiEye, FiTrash2 } from 'react-icons/fi'
 import { authenticate } from '../utils/auth'
 
 export function EnhancedPostScheduler() {
