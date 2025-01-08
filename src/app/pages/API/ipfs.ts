@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await ipfs.add(JSON.stringify(content));
       res.status(200).json({ uri: `ipfs://${result.path}` });
     } catch (error) {
-      res.status(500).json({ error: 'Error uploading to IPFS' });
+      res.status(500).json({ error: `Error uploading to IPFS ${error}` });
     }
   } else {
     res.setHeader('Allow', ['POST']);
