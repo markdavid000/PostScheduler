@@ -15,6 +15,7 @@ export function ScheduledPostsList({ posts }: ScheduledPostsListProps) {
         <ul className="space-y-4">
           {posts.map((post, index) => (
             <li key={index} className="border p-4 rounded-md">
+              <p>{post.address}</p>
               <p className="font-semibold">{post.content}</p>
               <p className="text-sm text-gray-500">
                 Scheduled for: {new Date(post.scheduledTime).toLocaleString()}

@@ -1,13 +1,13 @@
-import { create } from 'ipfs-http-client';
+// import { create } from 'ipfs-http-client';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { textOnly } from "@lens-protocol/metadata";
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3001/api', // Use our proxy server
+  uri: 'https://api.lens.dev',
   cache: new InMemoryCache(),
 });
 
-const ipfs = create({ url: 'https://ipfs.infura.io:5001/api/v0' }); // Use Infura IPFS node
+// const ipfs = create({ url: 'https://ipfs.infura.io:5001/api/v0' }); // Use Infura IPFS node
 
 const POST_MUTATION = gql`
   mutation CreatePost($request: PostRequest!) {
@@ -69,7 +69,14 @@ export const createPostTypedData = async (address: string, content: string, visi
 };
 
 async function uploadMetadata(metadata: any) {
-  const result = await ipfs.add(JSON.stringify(metadata));
-  return { uri: `ipfs://${result.path}` };
+  const response = await fetch('/api/ipfs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(metadata),
+  });
+  const data = await response.json();
+  return data;
 }
 
