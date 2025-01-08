@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from '@/components/ui/select'
 import { toaster } from '@/components/ui/toaster'
+import { contentOnIPFS } from '@/pages/api/ipfs'
 import { storeContentOnIPFS } from '../utils/ipfs'
 import { schedulePost, getScheduledPosts, checkScheduledPosts, clearPublishedAndFailedPosts, deleteScheduledPost } from '../utils/schedular'
 import { useAccount } from "wagmi"
@@ -82,6 +83,11 @@ export function EnhancedPostScheduler() {
       }
 
       const contentURI = await storeContentOnIPFS(content)
+
+      const URI = await contentOnIPFS(content)
+
+      console.log('Content URI:', contentURI)
+      console.log('Content URI:', URI)
 
       const newPost = await schedulePost(address, contentURI, visibility[0], scheduledTime, content)
 
@@ -195,6 +201,7 @@ export function EnhancedPostScheduler() {
                   transition={{ duration: 0.3 }}
                   className="bg-white bg-opacity-20 p-4 rounded-lg relative"
                 >
+                  <p className='text-white mb-2 font-semibold'>{post.address?.slice(0, 6)}...{post.address?.slice(-4)}</p>
                   <p className="text-white mb-2">{post.content}</p>
                   <div className="flex justify-between text-sm text-purple-200">
                     <span>{new Date(post.scheduledTime).toLocaleString()}</span>
