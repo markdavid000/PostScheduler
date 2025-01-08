@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+// import { setContext } from '@apollo/client/link/context';
 import { textOnly } from "@lens-protocol/metadata";
 import axios from 'axios';
 
