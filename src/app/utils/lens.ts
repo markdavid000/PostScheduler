@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-// import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/client';
+import { onError } from "@apollo/client/link/error";
+import { setContext } from '@apollo/client/link/context';
 import { textOnly } from "@lens-protocol/metadata";
 import axios from 'axios';
 
@@ -12,21 +13,31 @@ if (!PINATA_API_KEY || !PINATA_SECRET_API_KEY) {
 }
 
 const httpLink = createHttpLink({
-  uri: 'https://api.lens.dev',
+  uri: process.env.NODE_ENV === 'development' ? '/api/proxy' : 'https://api.lens.dev',
 });
 
-// const authLink = setContext((_, { headers }) => {
-//   const token = localStorage.getItem('lens-auth-token');
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Bearer ${token}` : "",
-//     }
-//   }
-// });
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('lens-auth-token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
+    );
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 const client = new ApolloClient({
-  link: httpLink,
+  link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });
 
